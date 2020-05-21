@@ -1,9 +1,12 @@
 import random, sys, os, rabinMiller
+
+
 # Greatest common divisor
 def GCD(a, b):
-    while a!= 0:
-        a, b = b%a, a
+    while a != 0:
+        a, b = b % a, a
     return b
+
 
 # Modular inverse - cryptomath module
 def findModInverse(a, m):
@@ -38,5 +41,6 @@ def generateKey(keySize):
     print('Public key:', publicKey)
     print('Private key:', privateKey)
     return (publicKey, privateKey)
+
 
 generateKey(1024)

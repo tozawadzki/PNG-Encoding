@@ -1,5 +1,6 @@
 import random
 
+
 def rabinMiller(num):
     s = num - 1
     t = 0
@@ -19,6 +20,7 @@ def rabinMiller(num):
                     i = i + 1
                     v = (v ** 2) % num
         return True
+
 
 def isPrime(num):
     if (num < 2):
@@ -47,6 +49,7 @@ def generateLargePrime(keysize=1024):
         num = random.randrange(2 ** (keysize - 1), 2 ** (keysize))
         if isPrime(num):
             return num
+
 
 largePrime = generateLargePrime()
 print(isPrime(largePrime))
