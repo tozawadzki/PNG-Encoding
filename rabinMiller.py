@@ -52,4 +52,4 @@ def generateLargePrime(keysize=1024):
 
 
 largePrime = generateLargePrime()
-print(isPrime(largePrime))
+#print(isPrime(largePrime))

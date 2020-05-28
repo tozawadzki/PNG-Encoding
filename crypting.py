@@ -9,10 +9,10 @@ def power(x, m, n):
     return a
 
 def encrypting(primeNumber, publicKey):
-    result = power(primeNumber, publicKey[0], publicKey[1])
+    result = power(primeNumber, publicKey[1], publicKey[0])
     return result
 
 
 def decrypting(primeNumber, privateKey):
-    result = power(primeNumber, privateKey[0], privateKey[1])
+    result = power(primeNumber, privateKey[1], privateKey[0])
     return result

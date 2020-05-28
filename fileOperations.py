@@ -1,3 +1,5 @@
+from Data import getIDAT
+
 def isPng(filename):
     fileInHex = getFileInHex(filename)
     # check whether IDAT chunk exists
@@ -10,3 +12,4 @@ def getFileInHex(filename):
     with open('images/{}'.format(filename), 'rb') as f:
         fileInHex = f.read.hex()
         return fileInHex
+

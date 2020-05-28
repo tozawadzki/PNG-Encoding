@@ -43,4 +43,4 @@ def generateKey(keySize):
     return (publicKey, privateKey)
 
 
-generateKey(1024)
+#generateKey(1024)
