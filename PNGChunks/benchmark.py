@@ -2,7 +2,7 @@
 import zlib
 import struct
 
-f = open('images/redExif.png', 'rb')
+f = open('redExif.png', 'rb')
 
 PngSignature = b'\x89PNG\r\n\x1a\n'
 if f.read(len(PngSignature)) != PngSignature:
