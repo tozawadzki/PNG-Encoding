@@ -55,8 +55,26 @@ def test_dec(file, public, private):
 def test(file, public, private):
     _, compress, decompress, _, _ = Data.getIDAT(file)
     k=0
+    foo = []
     block_size = 256
+    dec = decompress[0:block_size//2]
+    print(dec)
+    decompress = decompress.hex()
     block = decompress[0:k+block_size]
+    foo = (int(block, 16))
+    encrypy_block = crypting.encrypting(int(block, 16), public)
+    print(encrypy_block)
+    foo1 = crypting.decrypting(encrypy_block, privateKey)
+    print(foo1)
+    print(foo==foo1)
+    print(foo1.bit_length()//8 + 1)
+    xd = (foo1.to_bytes((foo1.bit_length() // 8) + 1, byteorder='big')).hex()
+    print(xd)
+    print(bytes.fromhex(xd))
+    dec1=bytes.fromhex(xd)
+    print(dec==dec1)
+
+    '''
     encryp = crypting.encrypting(int.from_bytes(block, byteorder='big'),public)
     foo = (encryp.to_bytes((encryp.bit_length() // 8) + 1, byteorder='big'))
     en=foo
@@ -64,7 +82,7 @@ def test(file, public, private):
     foo = (decryp.to_bytes((decryp.bit_length() // 8) + 1, byteorder='big'))
     de=foo
     print(block==de)
-
+'''
 def encrypt_compressed(file,public):
     _, compress, decompress, _, _ = Data.getIDAT(file)
     block_size = 64
