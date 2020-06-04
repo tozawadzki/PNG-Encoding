@@ -19,25 +19,32 @@ def test_en(file, public, private):
     k=0
     block_size = 256
     compress = bytearray(compress)
+    nozeroes = compress
     zeroes = bytearray()
     for times in range((len(compress)%block_size)):
         zeroes.append(0)
     compress = zeroes+compress
     while k < len(compress):
-        if k+block_size<len(compress):
-            block = compress[k:k+block_size]
+        if k==0:
+            block = compress[k:block_size]
+            foo = nozeroes[k:block_size]
+        elif k+block_size<len(compress):
+            block = compress[k:k+block_size-1]
+            foo = nozeroes[k:k+block_size-1]
             print(len(block))
         else:
             block = compress[k:len(compress)]
+            foo= nozeroes[k:len(nozeroes)-1]
         asrt.append(block)
+        de.append(foo)
         encryp = crypting.encrypting(int.from_bytes(block, byteorder='big'),public)
         foo = (encryp.to_bytes((encryp.bit_length() // 8) + 1, byteorder='big')).hex()
         en.append(bytes.fromhex(foo))
         k+=block_size
-    return b''.join(en), en, asrt
+    return b''.join(en), en, asrt, de
 
 def test_dec(file, public, private):
-    encoded, idat, asrt = test_en(file,public,private)
+    encoded, idat, asrt, nozero = test_en(file,public,private)
     _, compress, decompress, _, _ = Data.getIDAT(file)
     final = 0
     decrypt = []
@@ -51,76 +58,67 @@ def test_dec(file, public, private):
         decrypt.append(bytes.fromhex(foo))
     final = b''.join(decrypt)
     final = bytearray(final)
-    print(compress==final)
-    return final
-
-def encrypt_compressed(file,public):
-    _, compress, decompress, _, _ = Data.getIDAT(file)
-    block_size = 64
-    encrypt_compress = []
-    compress= compress.hex()
     k=0
-    '''    if len(compress)%8 != 0:
-        for add in range(len(compress)%8):
-            compress+='0'
-    '''
-
-    while k < len(compress):
-        if k+block_size<len(compress):
-            block = compress[k:k+block_size]
+    while k < len(final):
+        if k + block_size < len(compress):
+            block = compress[k:k + block_size]
+            foo = final[k:k + block_size]
+            print(len(block))
         else:
             block = compress[k:len(compress)]
-        print(int(block,16))
-        encrypy_block=crypting.encrypting(int(block,16),public)
-        encrypt_compress.append(encrypy_block)
+            foo = final[k:len(final)]
         k+=block_size
-    print(encrypt_compress)
-    print(crypting.decrypting(encrypt_compress[0],privateKey))
-
-
-def encrypt_decompressed(filename,public):
-    _, comp, decompress, _, _ = Data.getIDAT(filename)
-    encrypt_decompress = []
-    #size = len(decompress)
-    block_size = 64
-    foo = []
-    #foo1=[]
-    decompress = decompress.hex()
-    k = 0
-    '''
-    if len(decompress) % 8 != 0:
-        for add in range(len(decompress) % 8):
-            decompress += '00'
-    '''
+        idatt.append(foo)
+    print(compress==final)
+    return final
+'''
+def test_en_dec(file, public, private):
+    _, compress, decompress, _, _ = Data.getIDAT(file)
+    en = []
+    de = []
+    asrt = []
+    k=0
+    block_size = 256
+    decompress = bytearray(decompress)
+    nozeroes = compress
+    zeroes = bytearray()
+    for times in range((len(decompress)%block_size)):
+        zeroes.append(0)
+    compress = zeroes+decompress
     while k < len(decompress):
-        if k + block_size < len(decompress):
-            block = decompress[k:k + block_size]
+        if k+block_size<len(decompress):
+            block = decompress[k:k+block_size]
+            foo = nozeroes[k:k+block_size]
+            print(len(block))
         else:
             block = decompress[k:len(decompress)]
-        foo.append(int(block, 16))
-        encrypy_block = crypting.encrypting(int(block, 16), public)
-        print(bytes(encrypy_block))
-        encrypt_decompress.append(bytes(encrypy_block))
-        k += block_size
+            foo= nozeroes[k:len(nozeroes)]
+        asrt.append(block)
+        de.append(foo)
+        encryp = crypting.encrypting(int.from_bytes(block, byteorder='big'),public)
+        foo = (encryp.to_bytes((encryp.bit_length() // 8) + 1, byteorder='big')).hex()
+        en.append(bytes.fromhex(foo))
+        k+=block_size
+    return b''.join(en), en, asrt, de
 
-    #print(encrypt_decompress)
-    #for i in range(len(encrypt_decompress)):
-    #   foo1.append(crypting.decrypting(encrypt_decompress[i], privateKey))
-    #print(foo==foo1)
-
-def decrypt_compressed(filename,private):
-    _,compress,decompress,_,_ = Data.getIDAT(filename)
-    decrypt_compress = []
-    for j in range(len(compress)):
-        decrypt_compress.append(crypting.decrypting(compress[j],private))
-   # print(decrypt_compress)
-def decrypt_decompressed(filename,private):
-    _, comp, decompress, _, _ = Data.getIDAT(filename)
-    decrypt_dec = []
-    for j in range(len(decompress)):
-        decrypt_dec.append(crypting.decrypting(decompress[j], private))
-   # print(decrypt_dec)
-
+def test_dec_dec(file, public, private):
+    encoded, idat, asrt, nozero = test_en_dec(file,public,private)
+    _, compress, decompress, _, _ = Data.getIDAT(file)
+    final = 0
+    decrypt = []
+    idatt = []
+    k = 0
+    block_size = 256
+    print(len(encoded)//block_size)
+    for block in idat:
+        decryp = crypting.decrypting(int.from_bytes(block, byteorder='big'),private)
+        foo = (decryp.to_bytes((decryp.bit_length() // 8) + 1, byteorder='big')).hex()
+        decrypt.append(bytes.fromhex(foo))
+    final = b''.join(decrypt)
+    final = bytearray(final)
+    print(decompress==final)
+    return final
+'''
 def savePNG_decompress(OGfile,newfile):
     file = open(OGfile, 'rb')
     fileInHex = file.read().hex()
@@ -141,10 +139,11 @@ def savePNG_decompress(OGfile,newfile):
 
 
 #test('3x2.png',publicKey,privateKey)
-#test_dec('80x80.png',publicKey,privateKey)
+test_dec('150x150.png',publicKey,privateKey)
+#test_dec_dec('b3x3.png',publicKey,privateKey)
 #encrypt_compressed(filename,publicKey)
 #encrypt_decompressed(filename,publicKey)
 #fileOperations.displayImage('test.png')
-savePNG_decompress('80x80.png','test.png')
+#savePNG_decompress('80x80.png','test.png')
 
 
