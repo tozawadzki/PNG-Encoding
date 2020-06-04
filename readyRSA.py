@@ -3,6 +3,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 import zlib
 import base64
+import Data
 #ch9_generate_keys.py
 from Crypto.PublicKey import RSA
 
@@ -24,6 +25,7 @@ print (public_key)
 fd = open("public_key.pem", "wb")
 fd.write(public_key)
 fd.close()
+
 #Our Encryption Function
 def encrypt_blob(blob, public_key):
     #Import the Public Key and use for encryption using PKCS1_OAEP
@@ -48,12 +50,13 @@ def encrypt_blob(blob, public_key):
         #If the data chunk is less then the chunk size, then we need to add
         #padding with " ". This indicates the we reached the end of the file
         #so we end loop here
+        chunk = chunk.hex()
         if len(chunk) % chunk_size != 0:
             end_loop = True
             chunk += " " * (chunk_size - len(chunk))
 
         #Append the encrypted chunk to the overall encrypted file
-        encrypted += rsa_key.encrypt(chunk)
+        rsa_key.encrypt(chunk)
 
         #Increase the offset by chunk size
         offset += chunk_size
@@ -67,10 +70,13 @@ public_key = fd.read()
 fd.close()
 
 #Our candidate file to be encrypted
+'''
 fd = open("b3x3.png", "rb")
 unencrypted_blob = fd.read()
 fd.close()
-
+'''
+_, compress, decompress, _, _ = Data.getIDAT('80x80.png')
+unencrypted_blob = decompress
 encrypted_blob = encrypt_blob(unencrypted_blob, public_key)
 
 #Write the encrypted contents to a file

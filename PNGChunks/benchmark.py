@@ -2,7 +2,7 @@
 import zlib
 import struct
 
-f = open('redExif.png', 'rb')
+f = open('80x80.png', 'rb')
 
 PngSignature = b'\x89PNG\r\n\x1a\n'
 if f.read(len(PngSignature)) != PngSignature:
@@ -88,6 +88,8 @@ for r in range(height): # for each scanline
         else:
             raise Exception('unknown filter type: ' + str(filter_type))
         Recon.append(Recon_x & 0xff) # truncation to byte
+
+
 '''
 import matplotlib.pyplot as plt
 import numpy as np
