@@ -46,7 +46,7 @@ def isPrime(num):
 
 def generateLargePrime(keysize=1024):
     while True:
-        num = random.randrange(2 ** (keysize - 1), 2 ** (keysize))
+        num = random.SystemRandom().randint( 2 ** (keysize - 1), 2 ** (keysize))
         if isPrime(num):
             return num
 

@@ -30,7 +30,7 @@ def generateKey(keySize):
 
     # Step 2: Create a number e that is relatively prime to (p-1)*(q-1).
     while True:
-        e = random.randrange(2 ** (keySize - 1), 2 ** (keySize))
+        e = random.SystemRandom().randint(2 ** (keySize - 1), 2 ** (keySize))
         if GCD(e, (p - 1) * (q - 1)) == 1:
             break
 
